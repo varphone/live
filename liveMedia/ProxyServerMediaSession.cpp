@@ -36,6 +36,7 @@ public:
   virtual ~ProxyServerMediaSubsession();
 
   char const* codecName() const { return fCodecName; }
+  char const* url() const { return ((ProxyServerMediaSession*)fParentSession)->url(); }
 
 private: // redefined virtual functions
   virtual FramedSource* createNewStreamSource(unsigned clientSessionId,
@@ -66,7 +67,7 @@ private:
 ////////// ProxyServerMediaSession implementation //////////
 
 UsageEnvironment& operator<<(UsageEnvironment& env, const ProxyServerMediaSession& psms) { // used for debugging
-  return env << "ProxyServerMediaSession[\"" << psms.url() << "\"]";
+  return env << "ProxyServerMediaSession[" << psms.url() << "]";
 }
 
 ProxyRTSPClient*
@@ -150,6 +151,11 @@ RTCPInstance* ProxyServerMediaSession
   return RTCPInstance::createNew(envir(), RTCPgs, totSessionBW, cname, sink, NULL/*we're a server*/);
 }
 
+Boolean ProxyServerMediaSession::allowProxyingForSubsession(MediaSubsession const& /*mss*/) {
+  // Default implementation
+  return True;
+}
+
 void ProxyServerMediaSession::continueAfterDESCRIBE(char const* sdpDescription) {
   describeCompletedFlag = 1;
 
@@ -161,6 +167,8 @@ void ProxyServerMediaSession::continueAfterDESCRIBE(char const* sdpDescription) 
 
     MediaSubsessionIterator iter(*fClientMediaSession);
     for (MediaSubsession* mss = iter.next(); mss != NULL; mss = iter.next()) {
+      if (!allowProxyingForSubsession(*mss)) continue;
+
       ServerMediaSubsession* smss
 	= new ProxyServerMediaSubsession(*mss, fInitialPortNum, fMultiplexRTCPWithRTP);
       addSubsession(smss);
@@ -231,7 +239,7 @@ static void continueAfterGET_PARAMETER(RTSPClient* rtspClient, int resultCode, c
 ////////// "ProxyRTSPClient" implementation /////////
 
 UsageEnvironment& operator<<(UsageEnvironment& env, const ProxyRTSPClient& proxyRTSPClient) { // used for debugging
-  return env << "ProxyRTSPClient[\"" << proxyRTSPClient.url() << "\"]";
+  return env << "ProxyRTSPClient[" << proxyRTSPClient.url() << "]";
 }
 
 ProxyRTSPClient::ProxyRTSPClient(ProxyServerMediaSession& ourServerMediaSession, char const* rtspURL,
@@ -323,7 +331,7 @@ void ProxyRTSPClient::continueAfterLivenessCommand(int resultCode, Boolean serve
   scheduleLivenessCommand();
 }
 
-#define SUBSESSION_TIMEOUT_SECONDS 10 // how many seconds to wait for the last track's "SETUP" to be done (note below)
+#define SUBSESSION_TIMEOUT_SECONDS 5 // how many seconds to wait for the last track's "SETUP" to be done (note below)
 
 void ProxyRTSPClient::continueAfterSETUP(int resultCode) {
   if (resultCode != 0) {
@@ -470,7 +478,7 @@ ProxyServerMediaSubsession
 }
 
 UsageEnvironment& operator<<(UsageEnvironment& env, const ProxyServerMediaSubsession& psmss) { // used for debugging
-  return env << "ProxyServerMediaSubsession[\"" << psmss.codecName() << "\"]";
+  return env << "ProxyServerMediaSubsession[" << psmss.url() << "," << psmss.codecName() << "]";
 }
 
 ProxyServerMediaSubsession::~ProxyServerMediaSubsession() {
@@ -555,12 +563,20 @@ FramedSource* ProxyServerMediaSubsession::createNewStreamSource(unsigned clientS
       Boolean queueWasEmpty = proxyRTSPClient->fSetupQueueHead == NULL;
       if (queueWasEmpty) {
 	proxyRTSPClient->fSetupQueueHead = this;
+	proxyRTSPClient->fSetupQueueTail = this;
       } else {
-	proxyRTSPClient->fSetupQueueTail->fNext = this;
+	// Add ourself to the "RTSPClient"s 'SETUP queue' (if we're not already on it):
+	ProxyServerMediaSubsession* psms;
+	for (psms = proxyRTSPClient->fSetupQueueHead; psms != NULL; psms = psms->fNext) {
+	  if (psms == this) break;
+	}
+	if (psms == NULL) {
+	    proxyRTSPClient->fSetupQueueTail->fNext = this;
+	    proxyRTSPClient->fSetupQueueTail = this;
+	}
       }
-      proxyRTSPClient->fSetupQueueTail = this;
 
-      // Hack: If there's already a pending "SETUP" request (for another track), don't send this track's "SETUP" right away, because
+      // Hack: If there's already a pending "SETUP" request, don't send this track's "SETUP" right away, because
       // the server might not properly handle 'pipelined' requests.  Instead, wait until after previous "SETUP" responses come back.
       if (queueWasEmpty) {
 	proxyRTSPClient->sendSetupCommand(fClientMediaSubsession, ::continueAfterSETUP,
@@ -597,8 +613,16 @@ void ProxyServerMediaSubsession::closeStreamSource(FramedSource* inputSource) {
     ProxyServerMediaSession* const sms = (ProxyServerMediaSession*)fParentSession;
     ProxyRTSPClient* const proxyRTSPClient = sms->fProxyRTSPClient;
     if (proxyRTSPClient->fLastCommandWasPLAY) { // so that we send only one "PAUSE"; not one for each subsession
-      proxyRTSPClient->sendPauseCommand(fClientMediaSubsession.parentSession(), NULL, proxyRTSPClient->auth());
-      proxyRTSPClient->fLastCommandWasPLAY = False;
+      if (fParentSession->referenceCount() > 1) {
+	// There are other client(s) still streaming other subsessions of this stream.
+	// Therefore, we don't send a "PAUSE" for the whole stream, but only for the sub-stream:
+	proxyRTSPClient->sendPauseCommand(fClientMediaSubsession, NULL, proxyRTSPClient->auth());
+      } else {
+	// Normal case: There are no other client still streaming (parts of) this stream.
+	// Send a "PAUSE" for the whole stream.
+	proxyRTSPClient->sendPauseCommand(fClientMediaSubsession.parentSession(), NULL, proxyRTSPClient->auth());
+	proxyRTSPClient->fLastCommandWasPLAY = False;
+      }
     }
   }
 }
