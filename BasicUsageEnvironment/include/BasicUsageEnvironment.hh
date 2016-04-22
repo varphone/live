@@ -53,6 +53,8 @@ public:
     // (You should set it to 0 only if you know that you will not be using 'event triggers'.)
   virtual ~BasicTaskScheduler();
 
+  virtual void SingleStep(unsigned maxDelayTime);
+  
 protected:
   BasicTaskScheduler(unsigned maxSchedulerGranularity);
       // called only by "createNew()"
@@ -62,7 +64,6 @@ protected:
 
 protected:
   // Redefined virtual functions:
-  virtual void SingleStep(unsigned maxDelayTime);
 
   virtual void setBackgroundHandling(int socketNum, int conditionSet, BackgroundHandlerProc* handlerProc, void* clientData);
   virtual void moveSocketHandling(int oldSocketNum, int newSocketNum);
