@@ -112,7 +112,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\..\BasicUsageEnvironment\include;D:\Workspace\Source\live.2015.12.22\groupsock\include;D:\Workspace\Source\live.2015.12.22\liveMedia\include;D:\Workspace\Source\live.2015.12.22\UsageEnvironment\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\BasicUsageEnvironment\include;..\..\groupsock\include;..\..\liveMedia\include;..\..\UsageEnvironment\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
