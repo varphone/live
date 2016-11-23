@@ -1,7 +1,7 @@
 /**********
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the
-Free Software Foundation; either version 2.1 of the License, or (at your
+Free Software Foundation; either version 3 of the License, or (at your
 option) any later version. (See <http://www.gnu.org/copyleft/lesser.html>.)
 
 This library is distributed in the hope that it will be useful, but WITHOUT
@@ -14,7 +14,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 **********/
 // "liveMedia"
-// Copyright (c) 1996-2016 Live Networks, Inc.  All rights reserved.
+// Copyright (c) 1996-2017 Live Networks, Inc.  All rights reserved.
 // A subclass of "ServerMediaSession" that can be used to create a (unicast) RTSP servers that acts as a 'proxy' for
 // another (unicast or multicast) RTSP/RTP stream.
 // Implementation
@@ -129,7 +129,6 @@ ProxyServerMediaSession::~ProxyServerMediaSession() {
   }
 
   // Then delete our state:
-  Medium::close(fTranscodingTable);
   Medium::close(fClientMediaSession);
   Medium::close(fProxyRTSPClient);
   Medium::close(fPresentationTimeSessionNormalizer);
@@ -498,8 +497,8 @@ FramedSource* ProxyServerMediaSubsession::createNewStreamSource(unsigned clientS
 
   // If we haven't yet created a data source from our 'media subsession' object, initiate() it to do so:
   if (fClientMediaSubsession.readSource() == NULL) {
-    fClientMediaSubsession.receiveRawMP3ADUs(); // hack for MPA-ROBUST streams
-    fClientMediaSubsession.receiveRawJPEGFrames(); // hack for proxying JPEG/RTP streams. (Don't do this if we're transcoding.)
+    if (sms->fTranscodingTable == NULL || !sms->fTranscodingTable->weWillTranscode("audio", "MPA-ROBUST")) fClientMediaSubsession.receiveRawMP3ADUs(); // hack for proxying MPA-ROBUST streams
+    if (sms->fTranscodingTable == NULL || !sms->fTranscodingTable->weWillTranscode("video", "JPEG")) fClientMediaSubsession.receiveRawJPEGFrames(); // hack for proxying JPEG/RTP streams.
     fClientMediaSubsession.initiate();
     if (verbosityLevel() > 0) {
       envir() << "\tInitiated: " << *this << "\n";

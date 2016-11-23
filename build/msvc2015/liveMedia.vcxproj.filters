@@ -513,5 +513,11 @@
     <ClCompile Include="..\..\liveMedia\WAVAudioFileSource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\liveMedia\MPEG2TransportStreamAccumulator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\liveMedia\RTSPServerRegister.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

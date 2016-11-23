@@ -119,6 +119,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)..\..\$(ProjectName)\include\*.h $(SolutionDir)include\liveMedia\
+copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\liveMedia\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -137,6 +141,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)..\..\$(ProjectName)\include\*.h $(SolutionDir)include\liveMedia\
+copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\liveMedia\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

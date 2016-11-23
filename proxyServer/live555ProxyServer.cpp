@@ -1,7 +1,7 @@
 /**********
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the
-Free Software Foundation; either version 2.1 of the License, or (at your
+Free Software Foundation; either version 3 of the License, or (at your
 option) any later version. (See <http://www.gnu.org/copyleft/lesser.html>.)
 
 This library is distributed in the hope that it will be useful, but WITHOUT
@@ -13,7 +13,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this library; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 **********/
-// Copyright (c) 1996-2016, Live Networks, Inc.  All rights reserved
+// Copyright (c) 1996-2017, Live Networks, Inc.  All rights reserved
 // LIVE555 Proxy Server
 // main program
 
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
 
     case 'T': {
       // stream RTP and RTCP over a HTTP connection
-      if (argc > 3 && argv[2][0] != '-') {
+      if (argc > 2 && argv[2][0] != '-') {
 	// The next argument is the HTTP server port number:                                                                       
 	if (sscanf(argv[2], "%hu", &tunnelOverHTTPPortNum) == 1
 	    && tunnelOverHTTPPortNum > 0) {
@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
 
     case 'p': {
       // specify a rtsp server port number 
-      if (argc > 3 && argv[2][0] != '-') {
+      if (argc > 2 && argv[2][0] != '-') {
         // The next argument is the rtsp server port number:
         if (sscanf(argv[2], "%hu", &rtspServerPortNum) == 1
             && rtspServerPortNum > 0) {
