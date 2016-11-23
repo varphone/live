@@ -187,7 +187,7 @@ void H264or5VideoStreamParser
   u_int8_t const* nalUnitOrig = fStartOfFrame + fOutputStartCodeSize;
   unsigned const numBytesInNALunit = fTo - nalUnitOrig;
   nalUnitCopySize
-    = removeH264or5EmulationBytes(nalUnitCopy, maxSize, nalUnitOrig, numBytesInNALunit);
+    = removeH264or5EmulationBytes(nalUnitCopy, maxSize, (u_int8_t*)nalUnitOrig, numBytesInNALunit);
 }
 
 #ifdef DEBUG
