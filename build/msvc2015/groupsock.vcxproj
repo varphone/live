@@ -120,8 +120,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)..\..\$(ProjectName)\include\*.h $(SolutionDir)include\liveMedia\
-copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\liveMedia\</Command>
+      <Command>copy $(SolutionDir)..\..\$(ProjectName)\include\*.h $(SolutionDir)include\live\
+copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\live\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,8 +143,8 @@ copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\liveM
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)..\..\$(ProjectName)\include\*.h $(SolutionDir)include\liveMedia\
-copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\liveMedia\</Command>
+      <Command>copy $(SolutionDir)..\..\$(ProjectName)\include\*.h $(SolutionDir)include\live\
+copy $(SolutionDir)..\..\$(ProjectName)\include\*.hh $(SolutionDir)include\live\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
