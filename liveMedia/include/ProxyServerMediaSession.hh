@@ -50,14 +50,18 @@ public:
   void continueAfterLivenessCommand(int resultCode, Boolean serverSupportsGetParameter);
   void continueAfterSETUP(int resultCode);
   void continueAfterPLAY(int resultCode);
+  void scheduleReset();
 
 private:
   void reset();
+  int connectToServer(int socketNum, portNumBits remotePortNum);
 
   Authenticator* auth() { return fOurAuthenticator; }
 
   void scheduleLivenessCommand();
   static void sendLivenessCommand(void* clientData);
+  void doReset();
+  static void doReset(void* clientData);
 
   void scheduleDESCRIBECommand();
   static void sendDESCRIBE(void* clientData);
@@ -75,8 +79,8 @@ private:
   class ProxyServerMediaSubsession *fSetupQueueHead, *fSetupQueueTail;
   unsigned fNumSetupsDone;
   unsigned fNextDESCRIBEDelay; // in seconds
-  Boolean fServerSupportsGetParameter, fLastCommandWasPLAY, fResetOnNextLivenessTest;
-  TaskToken fLivenessCommandTask, fDESCRIBECommandTask, fSubsessionTimerTask;
+  Boolean fServerSupportsGetParameter, fLastCommandWasPLAY, fDoneDESCRIBE;
+  TaskToken fLivenessCommandTask, fDESCRIBECommandTask, fSubsessionTimerTask, fResetTask;
 };
 
 

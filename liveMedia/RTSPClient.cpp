@@ -397,7 +397,6 @@ RTSPClient::RTSPClient(UsageEnvironment& env, char const* rtspURL,
 }
 
 RTSPClient::~RTSPClient() {
-  RTPInterface::clearServerRequestAlternativeByteHandler(envir(), fInputSocketNum); // in case we were receiving RTP-over-TCP
   reset();
 
   delete[] fResponseBuffer;
@@ -425,6 +424,7 @@ void RTSPClient::setBaseURL(char const* url) {
 
 int RTSPClient::grabSocket() {
   int inputSocket = fInputSocketNum;
+  RTPInterface::clearServerRequestAlternativeByteHandler(envir(), fInputSocketNum); // in case we were receiving RTP-over-TCP
   fInputSocketNum = -1;
 
   return inputSocket;
@@ -833,6 +833,7 @@ Boolean RTSPClient::isRTSPClient() const {
 
 void RTSPClient::resetTCPSockets() {
   if (fInputSocketNum >= 0) {
+    RTPInterface::clearServerRequestAlternativeByteHandler(envir(), fInputSocketNum); // in case we were receiving RTP-over-TCP
     envir().taskScheduler().disableBackgroundHandling(fInputSocketNum);
     ::closeSocket(fInputSocketNum);
     if (fOutputSocketNum != fInputSocketNum) {
@@ -866,9 +867,11 @@ int RTSPClient::openConnection() {
     }
     
     // We don't yet have a TCP socket (or we used to have one, but it got closed).  Set it up now.
-    fInputSocketNum = fOutputSocketNum = setupStreamSocket(envir(), 0);
+    fInputSocketNum = setupStreamSocket(envir(), 0);
     if (fInputSocketNum < 0) break;
     ignoreSigPipeOnSocket(fInputSocketNum); // so that servers on the same host that get killed don't also kill us
+    if (fOutputSocketNum < 0) fOutputSocketNum = fInputSocketNum;
+    envir() << "Created new TCP socket " << fInputSocketNum << " for connection\n";
       
     // Connect to the remote endpoint:
     fServerAddress = *(netAddressBits*)(destAddress.data());
@@ -889,7 +892,7 @@ int RTSPClient::openConnection() {
 int RTSPClient::connectToServer(int socketNum, portNumBits remotePortNum) {
   MAKE_SOCKADDR_IN(remoteName, fServerAddress, htons(remotePortNum));
   if (fVerbosityLevel >= 1) {
-    envir() << "Opening connection to " << AddressString(remoteName).val() << ", port " << remotePortNum << "...\n";
+    envir() << "Connecting to " << AddressString(remoteName).val() << ", port " << remotePortNum << " on socket " << socketNum << "...\n";
   }
   if (connect(socketNum, (struct sockaddr*) &remoteName, sizeof remoteName) != 0) {
     int const err = envir().getErrno();
@@ -1748,7 +1751,7 @@ void RTSPClient::handleResponseBytes(int newBytesRead) {
 	    delete[] newBaseURL;
 	  }
 	} else if (checkForHeader(lineStart, "Connection:", 11, headerParamsStr)) {
-	  if (_strncasecmp(headerParamsStr, "Close", 5) == 0) {
+	  if (fTunnelOverHTTPPortNum == 0 && _strncasecmp(headerParamsStr, "Close", 5) == 0) {
 	    resetTCPSockets();
 	  }
 	}
