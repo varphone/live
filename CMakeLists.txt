@@ -7,6 +7,8 @@ project(live
 # Turn On -fPIC
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+option(STRICT_COMPILE "Enable all compiler warnings and treat as error" OFF)
+
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG(-ffunction-sections COMPILER_SUPPORTS_FFUNCTION_SECTION)
 CHECK_CXX_COMPILER_FLAG(-fdata-sections COMPILER_SUPPORTS_FDATA_SECTION)
@@ -17,6 +19,10 @@ endif()
 
 if(COMPILER_SUPPORTS_FDATA_SECTION)
 add_compile_options(-fdata-sections)
+endif()
+
+if(STRICT_COMPILE)
+add_compile_options(-Wall -Werror)
 endif()
 
 list(APPEND CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections")
