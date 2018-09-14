@@ -422,11 +422,11 @@ void RTCPInstance::incomingReportHandler1() {
       break;
     }
 
-    unsigned numBytesRead;
-    struct sockaddr_in fromAddress;
-    int tcpSocketNum;
-    unsigned char tcpStreamChannelId;
-    Boolean packetReadWasIncomplete;
+    unsigned numBytesRead = 0;
+    struct sockaddr_in fromAddress = { 0, 0, { 0 } };
+    int tcpSocketNum = -1;
+    unsigned char tcpStreamChannelId = 0;
+    Boolean packetReadWasIncomplete = False;
     Boolean readResult
       = fRTCPInterface.handleRead(&fInBuf[fNumBytesAlreadyRead], maxRTCPPacketSize - fNumBytesAlreadyRead,
 				  numBytesRead, fromAddress,
