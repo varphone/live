@@ -538,7 +538,8 @@ void RTCPInstance
       if (length > packetSize) break;
 
       // Assume that each RTCP subpacket begins with a 4-byte SSRC:
-      if (length < 4) break; length -= 4;
+      if (length < 4) break;
+      length -= 4;
       reportSenderSSRC = ntohl(*(u_int32_t*)pkt); ADVANCE(4);
 #ifdef HACK_FOR_CHROME_WEBRTC_BUG
       if (reportSenderSSRC == 0x00000001 && pt == RTCP_PT_RR) {
@@ -556,7 +557,8 @@ void RTCPInstance
 #ifdef DEBUG
 	  fprintf(stderr, "SR\n");
 #endif
-	  if (length < 20) break; length -= 20;
+	  if (length < 20) break;
+    length -= 20;
 
 	  // Extract the NTP timestamp, and note this:
 	  unsigned NTPmsw = ntohl(*(u_int32_t*)pkt); ADVANCE(4);

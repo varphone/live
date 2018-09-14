@@ -198,7 +198,7 @@ int H263plusVideoStreamParser::parseH263Frame( )
 
    if (row != -1) {
       fprintf(stderr, "%s: Buffer too small (%u)\n",
-         "h263reader:", bufferEnd - fTo + ADDITIONAL_BYTES_NEEDED);
+         "h263reader:", static_cast<unsigned int>(bufferEnd - fTo + ADDITIONAL_BYTES_NEEDED));
       return 0;
    }
 

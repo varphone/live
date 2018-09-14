@@ -762,7 +762,7 @@ Boolean MediaSubsession::initiate(int useSpecialRTPoffset) {
 	if ((fClientPortNum&1) != 0) { // it's odd
 	  // Record this socket in our table, and keep trying:
 	  unsigned key = (unsigned)fClientPortNum;
-	  Groupsock* existing = (Groupsock*)socketHashTable->Add((char const*)key, fRTPSocket);
+	  Groupsock* existing = (Groupsock*)socketHashTable->Add(reinterpret_cast<char const*>(key), fRTPSocket);
 	  delete existing; // in case it wasn't NULL
 	  continue;
 	}
@@ -784,7 +784,7 @@ Boolean MediaSubsession::initiate(int useSpecialRTPoffset) {
 
 	  // Record the first socket in our table, and keep trying:
 	  unsigned key = (unsigned)fClientPortNum;
-	  Groupsock* existing = (Groupsock*)socketHashTable->Add((char const*)key, fRTPSocket);
+	  Groupsock* existing = (Groupsock*)socketHashTable->Add(reinterpret_cast<char const*>(key), fRTPSocket);
 	  delete existing; // in case it wasn't NULL
 	  continue;
 	}
@@ -1103,7 +1103,8 @@ Boolean MediaSubsession::parseSDPAttribute_fmtp(char const* sdpLine) {
   // Check for a "a=fmtp:" line:
   // Later: Check that payload format number matches; #####
   do {
-    if (strncmp(sdpLine, "a=fmtp:", 7) != 0) break; sdpLine += 7;
+    if (strncmp(sdpLine, "a=fmtp:", 7) != 0) break;
+    sdpLine += 7;
     while (isdigit(*sdpLine)) ++sdpLine;
 
     // The remaining "sdpLine" should be a sequence of
