@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(live
-	VERSION 2018.07.07
+	VERSION 2018.09.10
 )
 
 # Turn On -fPIC
