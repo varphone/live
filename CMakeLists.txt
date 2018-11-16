@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 project(live
-	VERSION 2018.09.10
+	VERSION 2018.10.17
 	LANGUAGES C CXX
 )
 
