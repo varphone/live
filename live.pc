@@ -1,0 +1,11 @@
+﻿prefix=/usr
+exec_prefix=/usr
+libdir=/usr/lib
+includedir=/usr/include
+
+Name: live
+Description: LIVE555 Streaming Media library
+Version: 2018.10.17
+Requires:
+Cflags: -I${includedir}
+Libs: -L${libdir} -lliveMedia -lBasicUsageEnvironment -lgroupsock -lUsageEnvironment
