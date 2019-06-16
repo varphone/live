@@ -617,6 +617,7 @@ MediaSubsession::MediaSubsession(MediaSession& parent)
   setAttribute("profile-id", "1"); // used with "video/H265"
   setAttribute("level-id", "93"); // used with "video/H265"
   setAttribute("interop-constraints", "B00000000000"); // used with "video/H265"
+  setAttribute("sampling", "RGB"); // used with "video/JPEG2000"
 }
 
 MediaSubsession::~MediaSubsession() {
@@ -1355,6 +1356,11 @@ Boolean MediaSubsession::createSourceObjects(int useSpecialRTPoffset) {
 					    videoWidth(),
 					    videoHeight());
 	}
+      } else if (strcmp(fCodecName, "JPEG2000") == 0) { // JPEG 2000 video
+        fReadSource = fRTPSource
+          = JPEG2000VideoRTPSource::createNew(env(), fRTPSocket, fRTPPayloadFormat,
+					      fRTPTimestampFrequency,
+					      attrVal_str("sampling"));
       } else if (strcmp(fCodecName, "X-QT") == 0
 		 || strcmp(fCodecName, "X-QUICKTIME") == 0) {
 	// Generic QuickTime streams, as defined in
