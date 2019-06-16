@@ -8,7 +8,7 @@ option(STRICT_COMPILE   "Enable all compiler warnings and treat as error"   OFF)
 
 # Project setup
 project(live
-	VERSION 2018.10.17
+	VERSION 2019.03.06
 	LANGUAGES C CXX
 )
 
