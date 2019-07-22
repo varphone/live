@@ -39,6 +39,9 @@ endif()
 #add_compile_options(-fno-rtti)
 
 add_definitions(-DSOCKLEN_T=socklen_t)
+add_definitions(-DALLOW_SERVER_PORT_REUSE=1)
+add_definitions(-DALLOW_RTSP_SERVER_PORT_REUSE=1)
+add_definitions(-DREUSE_FOR_TCP=1)
 
 add_subdirectory(BasicUsageEnvironment)
 add_subdirectory(groupsock)
