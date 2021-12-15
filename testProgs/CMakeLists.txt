@@ -22,7 +22,7 @@ include_directories(
 
 foreach(test IN LISTS TESTS)
 	get_filename_component(tst ${test} NAME_WE)
-	add_executable(${tst} ${test})
+	add_executable(${tst} ${test} announceURL.cpp)
 	target_link_libraries(${tst}
 		liveMedia
 		BasicUsageEnvironment
