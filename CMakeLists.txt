@@ -5,6 +5,7 @@ option(BUILD_BUNDLE     "Build bundle library"                              ON)
 option(BUILD_EXAMPLES   "Build examples directory"                          OFF)
 option(BUILD_TESTS      "Build tests directory"                             OFF)
 option(STRICT_COMPILE   "Enable all compiler warnings and treat as error"   OFF)
+option(WITH_OPENSSL     "Enalble openssl"                                   OFF)
 
 # Project setup
 project(live
@@ -42,6 +43,9 @@ add_definitions(-DSOCKLEN_T=socklen_t)
 add_definitions(-DALLOW_SERVER_PORT_REUSE=1)
 add_definitions(-DALLOW_RTSP_SERVER_PORT_REUSE=1)
 add_definitions(-DREUSE_FOR_TCP=1)
+if(NOT WITH_OPENSSL)
+add_definitions(-DNO_OPENSSL=1)
+endif()
 
 add_subdirectory(BasicUsageEnvironment)
 add_subdirectory(groupsock)
