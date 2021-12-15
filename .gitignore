@@ -29,3 +29,8 @@
 
 # Build
 build/**
+
+# Patch
+*.orig
+*.rej
+
