@@ -435,7 +435,7 @@ void RTCPInstance::incomingReportHandler1() {
     }
 
     unsigned numBytesRead = 0;
-    struct sockaddr_storage fromAddress = { 0, 0, { 0 } };
+    struct sockaddr_storage fromAddress;
     int tcpSocketNum = -1;
     unsigned char tcpStreamChannelId = 0;
     Boolean packetReadWasIncomplete = False;
