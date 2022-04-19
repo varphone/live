@@ -9,7 +9,7 @@ option(WITH_OPENSSL     "Enalble openssl"                                   OFF)
 
 # Project setup
 project(live
-	VERSION 2019.06.28
+	VERSION 2022.04.15
 	LANGUAGES C CXX
 )
 
