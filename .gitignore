@@ -1,5 +1,9 @@
+# Ignore Visual Studio Code project files
+.vscode/
+
 # Generated files
 **/Makefile
+**/*.mak
 
 # Compiled objects
 *.a
@@ -44,3 +48,4 @@ testProgs/testRelay
 testProgs/testReplicator
 testProgs/testWAVAudioStreamer
 testProgs/vobStreamer
+**/*.exe
