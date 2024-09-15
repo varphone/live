@@ -25,23 +25,30 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 #include "RTSPServer.hh"
 #endif
 
-class MyRTSPServer: public RTSPServer {
+class MyRTSPServer : public RTSPServer
+{
 public:
-  static MyRTSPServer* createNew(UsageEnvironment& env, Port ourPort,
-				      UserAuthenticationDatabase* authDatabase,
-				      unsigned reclamationTestSeconds = 65);
+  static MyRTSPServer* createNew(UsageEnvironment& env,
+                                 Port ourPort,
+                                 UserAuthenticationDatabase* authDatabase,
+                                 unsigned reclamationTestSeconds = 65);
 
 protected:
-  MyRTSPServer(UsageEnvironment& env, int ourSocketIPv4, int ourSocketIPv6, Port ourPort,
-		    UserAuthenticationDatabase* authDatabase, unsigned reclamationTestSeconds);
+  MyRTSPServer(UsageEnvironment& env,
+               int ourSocketIPv4,
+               int ourSocketIPv6,
+               Port ourPort,
+               UserAuthenticationDatabase* authDatabase,
+               unsigned reclamationTestSeconds);
   // called only by createNew();
   virtual ~MyRTSPServer();
 
 protected: // redefined virtual functions
-  virtual void lookupServerMediaSession(char const* streamName,
-					lookupServerMediaSessionCompletionFunc* completionFunc,
-					void* completionClientData,
-					Boolean isFirstLookupInSession);
+  virtual void lookupServerMediaSession(
+    char const* streamName,
+    lookupServerMediaSessionCompletionFunc* completionFunc,
+    void* completionClientData,
+    Boolean isFirstLookupInSession);
 };
 
 #endif

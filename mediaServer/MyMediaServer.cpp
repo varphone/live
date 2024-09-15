@@ -17,12 +17,13 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // My Media Server
 // main program
 
-#include <BasicUsageEnvironment.hh>
 #include "MyRTSPServer.hh"
 #include "version.hh"
+#include <BasicUsageEnvironment.hh>
 #include <GroupsockHelper.hh> // for "weHaveAnIPv*Address()"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   // Begin by setting up our usage environment:
   TaskScheduler* scheduler = BasicTaskScheduler::createNew();
   UsageEnvironment* env = BasicUsageEnvironment::createNew(*scheduler);
@@ -31,7 +32,8 @@ int main(int argc, char** argv) {
 #ifdef ACCESS_CONTROL
   // To implement client access control to the RTSP server, do the following:
   authDB = new UserAuthenticationDatabase;
-  authDB->addUserRecord("username1", "password1"); // replace these with real strings
+  authDB->addUserRecord("username1",
+                        "password1"); // replace these with real strings
   // Repeat the above with each <username>, <password> that you wish to allow
   // access to the server.
 #endif
@@ -60,7 +62,8 @@ int main(int argc, char** argv) {
     char* rtspURLPrefix = rtspServer->ipv4rtspURLPrefix();
     *env << "\t" << rtspURLPrefix << "<filename>\n";
     delete[] rtspURLPrefix;
-    if (weHaveAnIPv6Address(*env)) *env << "or\n";
+    if (weHaveAnIPv6Address(*env))
+      *env << "or\n";
   }
   if (weHaveAnIPv6Address(*env)) {
     char* rtspURLPrefix = rtspServer->ipv6rtspURLPrefix();
@@ -80,20 +83,25 @@ int main(int argc, char** argv) {
   *env << "\t\".mkv\" => a Matroska audio+video+(optional)subtitles file\n";
   *env << "\t\".mp3\" => a MPEG-1 or 2 Audio file\n";
   *env << "\t\".mpg\" => a MPEG-1 or 2 Program Stream (audio+video) file\n";
-  *env << "\t\".ogg\" or \".ogv\" or \".opus\" => an Ogg audio and/or video file\n";
+  *env << "\t\".ogg\" or \".ogv\" or \".opus\" => an Ogg audio and/or video "
+          "file\n";
   *env << "\t\".ts\" => a MPEG Transport Stream file\n";
-  *env << "\t\t(a \".tsx\" index file - if present - provides server 'trick play' support)\n";
+  *env << "\t\t(a \".tsx\" index file - if present - provides server 'trick "
+          "play' support)\n";
   *env << "\t\".vob\" => a VOB (MPEG-2 video with AC-3 audio) file\n";
   *env << "\t\".wav\" => a WAV Audio file\n";
   *env << "\t\".webm\" => a WebM audio(Vorbis)+video(VP8) file\n";
   *env << "See http://www.My.com/mediaServer/ for additional documentation.\n";
 
   // Also, attempt to create a HTTP server for RTSP-over-HTTP tunneling.
-  // Try first with the default HTTP port (80), and then with the alternative HTTP
-  // port numbers (8000 and 8080).
+  // Try first with the default HTTP port (80), and then with the alternative
+  // HTTP port numbers (8000 and 8080).
 
-  if (rtspServer->setUpTunnelingOverHTTP(80) || rtspServer->setUpTunnelingOverHTTP(8000) || rtspServer->setUpTunnelingOverHTTP(8080)) {
-    *env << "(We use port " << rtspServer->httpServerPortNum() << " for optional RTSP-over-HTTP tunneling).)\n";
+  if (rtspServer->setUpTunnelingOverHTTP(80) ||
+      rtspServer->setUpTunnelingOverHTTP(8000) ||
+      rtspServer->setUpTunnelingOverHTTP(8080)) {
+    *env << "(We use port " << rtspServer->httpServerPortNum()
+         << " for optional RTSP-over-HTTP tunneling).)\n";
   } else {
     *env << "(RTSP-over-HTTP tunneling is not available.)\n";
   }
