@@ -12,12 +12,15 @@ all: $(ALL)
 	$(CPLUSPLUS_COMPILER) -c $(CPLUSPLUS_FLAGS) $<
 
 MEDIA_SERVER_OBJS = live555MediaServer.$(OBJ) DynamicRTSPServer.$(OBJ)
-MY_MEDIA_SERVER_OBJS = MyMediaServer.$(OBJ) MyRTSPServer.$(OBJ)
+MY_MEDIA_SERVER_OBJS = MyMediaServer.$(OBJ) MyRTSPServer.$(OBJ) MyFrame.$(OBJ) MyH264VideoFramedSource.$(OBJ) MyH264VideoServerMediaSubsession.$(OBJ)
 
 live555MediaServer.$(CPP):	DynamicRTSPServer.hh version.hh
 DynamicRTSPServer.$(CPP):	DynamicRTSPServer.hh
 MyMediaServer.$(CPP):	MyRTSPServer.hh version.hh
 MyRTSPServer.$(CPP):	MyRTSPServer.hh
+MyFrame.$(CPP):	MyFrame.hh
+MyH264VideoFramedSource.$(CPP):	MyH264VideoFramedSource.hh
+MyH264VideoServerMediaSubsession.$(CPP):	MyH264VideoServerMediaSubsession.hh
 
 USAGE_ENVIRONMENT_DIR = ../UsageEnvironment
 USAGE_ENVIRONMENT_LIB = $(USAGE_ENVIRONMENT_DIR)/libUsageEnvironment.$(libUsageEnvironment_LIB_SUFFIX)
