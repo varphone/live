@@ -8,6 +8,7 @@
 #include <GroupsockHelper.hh> // for "weHaveAnIPv*Address()"
 #include <H264VideoFileServerMediaSubsession.hh>
 #include <H264VideoRTPSink.hh>
+#include <H264VideoStreamFramer.hh>
 #include <NetAddress.hh>
 #include <OnDemandServerMediaSubsession.hh>
 #include <RTSPServer.hh>

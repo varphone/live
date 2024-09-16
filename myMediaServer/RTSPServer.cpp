@@ -19,9 +19,11 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // Implementation
 
 #include "RTSPServer.hh"
+#include "H264VideoServerMediaSubsession.hh"
+#include "Stream.hh"
 
-#include <liveMedia.hh>
 #include <regex>
+#include <spdlog/spdlog.h>
 #include <string.h>
 
 namespace my {
@@ -61,9 +63,14 @@ RTSPServer::RTSPServer(UsageEnvironment& env,
 
 RTSPServer::~RTSPServer() {}
 
-static ServerMediaSession* createNewSMS(UsageEnvironment& env,
-                                        char const* fileName,
-                                        FILE* fid); // forward
+void RTSPServer::setPlaybackStreamProvider(StreamProviderRef provider)
+{
+  mPlaybackStreamProvider = provider;
+}
+
+// static ServerMediaSession* createNewSMS(UsageEnvironment& env,
+//                                         char const* fileName,
+//                                         FILE* fid); // forward
 
 void RTSPServer::lookupServerMediaSession(
   char const* streamName,
@@ -71,48 +78,14 @@ void RTSPServer::lookupServerMediaSession(
   void* completionClientData,
   Boolean isFirstLookupInSession)
 {
+  SPDLOG_DEBUG("RTSPServer::lookupServerMediaSession({}, {})",
+               streamName,
+               isFirstLookupInSession);
   ServerMediaSession* sms = nullptr;
-
   auto s = std::string(streamName);
-  std::regex re("track/[\\d]+");
+  std::regex re(R"(track\/\d+.*)");
   if (std::regex_match(s, re)) {
-    // First, check whether the specified "streamName" exists as a local file:
-    FILE* fid = fopen(streamName, "rb");
-    Boolean const fileExists = fid != NULL;
-
-    // Next, check whether we already have a "ServerMediaSession" for this file:
-    sms = getServerMediaSession(streamName);
-    Boolean const smsExists = sms != NULL;
-
-    printf(
-      "lookupServerMediaSession: streamName=%s, fileExists=%d, smsExists=%d\n",
-      streamName,
-      fileExists,
-      smsExists);
-
-    // Handle the four possibilities for "fileExists" and "smsExists":
-    if (!fileExists) {
-      if (smsExists) {
-        // "sms" was created for a file that no longer exists. Remove it:
-        removeServerMediaSession(sms);
-      }
-
-      sms = NULL;
-    } else {
-      if (smsExists && isFirstLookupInSession) {
-        // Remove the existing "ServerMediaSession" and create a new one, in
-        // case the underlying file has changed in some way:
-        removeServerMediaSession(sms);
-        sms = NULL;
-      }
-
-      if (sms == NULL) {
-        sms = createNewSMS(envir(), streamName, fid);
-        addServerMediaSession(sms);
-      }
-
-      fclose(fid);
-    }
+    sms = lookupPlaybackSMS(streamName, isFirstLookupInSession);
   } else {
     sms = getServerMediaSession(streamName);
   }
@@ -121,40 +94,28 @@ void RTSPServer::lookupServerMediaSession(
   }
 }
 
-#define NEW_SMS(description)                                                   \
-  do {                                                                         \
-    char const* descStr =                                                      \
-      description ", streamed by the LIVE555 Media Server";                    \
-    sms = ServerMediaSession::createNew(env, fileName, fileName, descStr);     \
-  } while (0)
-
-static ServerMediaSession* createNewSMS(UsageEnvironment& env,
-                                        char const* fileName,
-                                        FILE* /*fid*/)
+ServerMediaSession* RTSPServer::lookupPlaybackSMS(
+  char const* rawStreamName,
+  Boolean isFirstLookupInSession)
 {
-  // Use the file name extension to determine the type of "ServerMediaSession":
-  char const* extension = strrchr(fileName, '.');
-  if (extension == NULL)
-    return NULL;
-
-  ServerMediaSession* sms = NULL;
-  Boolean const reuseSource = False;
-  if (strcmp(extension, ".264") == 0) {
-    // Assumed to be a H.264 Video Elementary Stream file:
-    NEW_SMS("H.264 Video");
-    // allow for some possibly large H.264 frames
-    OutPacketBuffer::maxSize = 500000;
-    sms->addSubsession(H264VideoFileServerMediaSubsession::createNew(
-      env, fileName, reuseSource));
-  } else if (strcmp(extension, ".265") == 0) {
-    // Assumed to be a H.265 Video Elementary Stream file:
-    NEW_SMS("H.265 Video");
-    // allow for some possibly large H.265 frames
-    OutPacketBuffer::maxSize = 500000;
-    sms->addSubsession(H265VideoFileServerMediaSubsession::createNew(
-      env, fileName, reuseSource));
+  SPDLOG_DEBUG("RTSPServer::lookupPlaybackSMS({}, {})",
+               rawStreamName,
+               isFirstLookupInSession);
+  ServerMediaSession* sms = nullptr;
+  auto uri = StreamUri(rawStreamName);
+  if (mPlaybackStreamProvider) {
+    auto stream = mPlaybackStreamProvider->lookup(uri);
+    if (stream) {
+      sms = ServerMediaSession::createNew(
+        envir(), rawStreamName, rawStreamName, "My Media Server");
+      sms->addSubsession(
+        H264VideoServerMediaSubsession::createNew(envir(), stream, 0));
+      addServerMediaSession(sms);
+      auto url = rtspURL(sms);
+      spdlog::info("Stream \"{}\" ready.", url);
+      delete[] url;
+    }
   }
-
   return sms;
 }
 

@@ -47,4 +47,29 @@ bool H264FramedReader::rewind()
   return mFile.is_open();
 }
 
+PlaybackSampleStreams::PlaybackSampleStreams()
+{
+  SPDLOG_TRACE("PlaybackSampleStreams::PlaybackSampleStreams() @ {}",
+               (void*)this);
+}
+
+PlaybackSampleStreams::~PlaybackSampleStreams()
+{
+  SPDLOG_TRACE("PlaybackSampleStreams::~PlaybackSampleStreams() @ {}",
+               (void*)this);
+}
+
+PlaybackSampleStreamsRef PlaybackSampleStreams::get()
+{
+  static PlaybackSampleStreamsRef streams(new PlaybackSampleStreams());
+  return streams;
+}
+
+StreamBaseRef PlaybackSampleStreams::lookup(StreamUri uri)
+{
+  SPDLOG_DEBUG("PlaybackSampleStreams::lookup({})", uri);
+  auto stream = std::make_shared<SampleStream>(false);
+  return stream;
+}
+
 } // namespace my

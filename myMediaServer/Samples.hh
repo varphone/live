@@ -17,7 +17,7 @@ class H264FramedReader
 public:
   /// 构造函数
   /// \param fileName 文件名
-  explicit H264FramedReader(const std::string& fileName);
+  H264FramedReader(const std::string& fileName);
   /// 析构函数
   ~H264FramedReader();
   /// 清空状态及缓冲区
@@ -113,27 +113,6 @@ public:
     SPDLOG_DEBUG("LiveSampleStreams::~LiveSampleStreams() @ {}", (void*)this);
   }
 
-  /// 获取单例
-  static LiveSampleStreamsRef get()
-  {
-    static LiveSampleStreamsRef streams(new LiveSampleStreams());
-    return streams;
-  }
-
-  // void setStream(int streamId, std::shared_ptr<StreamBase> stream)
-  // {
-  //   std::lock_guard<std::mutex> lock(mMutex);
-  //   mStreams.push_back(stream);
-  // }
-
-  // void clearStream(int streamId)
-  // {
-  //   std::lock_guard<std::mutex> lock(mMutex);
-  //   auto it = std::find(mStreams.begin(), mStreams.end(), stream);
-  //   if (it != mStreams.end())
-  //     mStreams.erase(it);
-  // }
-
   /// 查找流
   StreamBaseRef findStream(int streamId)
   {
@@ -168,7 +147,7 @@ public:
     // 创建线程在后台运行
     auto thread = new std::thread([this]() {
       // 创建帧读取器
-      auto reader = H264FramedReader("example.264.framed");
+      H264FramedReader reader("example.264.framed");
       // 标记线程运行
       mRunning.store(true);
       // 循环
@@ -202,6 +181,14 @@ public:
     }
   }
 
+public:
+  /// 获取单例
+  static LiveSampleStreamsRef get()
+  {
+    static LiveSampleStreamsRef streams(new LiveSampleStreams());
+    return streams;
+  }
+
 private:
   /// 构造函数
   LiveSampleStreams()
@@ -222,6 +209,28 @@ private:
   std::atomic_bool mRunning{ false };
   /// 线程
   std::thread* mThread{ nullptr };
+};
+
+class PlaybackSampleStreams;
+using PlaybackSampleStreamsRef = std::shared_ptr<PlaybackSampleStreams>;
+
+/// 回放示例流
+class PlaybackSampleStreams : public StreamProvider
+{
+public:
+  /// 析构函数
+  virtual ~PlaybackSampleStreams();
+
+  /// 查找流
+  StreamBaseRef lookup(StreamUri uri) override;
+
+public:
+  /// 获取单例
+  static PlaybackSampleStreamsRef get();
+
+private:
+  /// 构造函数
+  PlaybackSampleStreams();
 };
 
 } // namespace my

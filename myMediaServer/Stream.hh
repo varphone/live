@@ -2,10 +2,10 @@
 #define _MY_STREAM_HH
 
 #include "Frame.hh"
-#include "spdlog/spdlog.h"
 
 #include <memory>
 #include <mutex>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 namespace my {
@@ -17,6 +17,7 @@ using StreamBaseRef = std::shared_ptr<StreamBase>;
 class StreamBase
 {
 public:
+  /// 析构函数
   virtual ~StreamBase() {}
   /// 获取下一个帧
   /// \param trackId 轨道 ID, 从 0 开始
@@ -56,6 +57,55 @@ public:
 
 private:
   bool mEos{ false };
+};
+
+/// 流 URI
+class StreamUri
+{
+public:
+  /// 构造函数
+  /// \param streamName 流名称, 格式为: track/0?&startTime=0&endTime=0
+  StreamUri(char const* streamName);
+  /// 析构函数
+  ~StreamUri();
+
+  /// 获取原始名称
+  std::string const& raw() const { return mRaw; }
+  /// 获取路径
+  std::string const& path() const { return mPath; }
+  /// 获取轨道 ID
+  int trackId() const { return mTrackId; }
+  /// 获取开始时间
+  int64_t startTime() const { return mStartTime; }
+  /// 获取结束时间
+  int64_t endTime() const { return mEndTime; }
+
+private:
+  /// 原始名称
+  std::string mRaw{};
+  /// 路径
+  std::string mPath{};
+  /// 轨道 ID
+  int mTrackId{ -1 };
+  /// 开始时间
+  int64_t mStartTime{ -1 };
+  /// 结束时间
+  int64_t mEndTime{ -1 };
+};
+
+class StreamProvider;
+using StreamProviderRef = std::shared_ptr<StreamProvider>;
+
+/// 流提供者
+class StreamProvider
+{
+public:
+  /// 析构函数
+  virtual ~StreamProvider() {}
+  /// 查找流
+  /// \param uri 流 URI
+  /// \return 流共享指针，如果没有找到返回 nullptr。
+  virtual StreamBaseRef lookup(StreamUri uri) = 0;
 };
 
 /// H264 视频流
@@ -111,5 +161,20 @@ private:
   bool mEos;
 };
 } // namespace my
+
+template<>
+struct fmt::formatter<my::StreamUri> : fmt::formatter<std::string>
+{
+  auto format(my::StreamUri my, format_context& ctx) const
+    -> decltype(ctx.out())
+  {
+    return format_to(ctx.out(),
+                     "{{Path:{}, TrackId: {}, StartTime: {}, EndTime: {}}}",
+                     my.path(),
+                     my.trackId(),
+                     my.startTime(),
+                     my.endTime());
+  }
+};
 
 #endif // _MY_STREAM_HH
