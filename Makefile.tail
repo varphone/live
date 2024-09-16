@@ -9,6 +9,8 @@ TESTPROGS_DIR = testProgs
 
 MEDIA_SERVER_DIR = mediaServer
 
+MY_MEDIA_SERVER_DIR = myMediaServer
+
 PROXY_SERVER_DIR = proxyServer
 
 HLS_PROXY_DIR = hlsProxy
@@ -20,6 +22,7 @@ all:
 	cd $(BASIC_USAGE_ENVIRONMENT_DIR) ; $(MAKE)
 	cd $(TESTPROGS_DIR) ; $(MAKE)
 	cd $(MEDIA_SERVER_DIR) ; $(MAKE)
+	cd $(MY_MEDIA_SERVER_DIR) ; $(MAKE)
 	cd $(PROXY_SERVER_DIR) ; $(MAKE)
 	cd $(HLS_PROXY_DIR) ; $(MAKE)
 	@echo
@@ -32,6 +35,7 @@ install:
 	cd $(BASIC_USAGE_ENVIRONMENT_DIR) ; $(MAKE) install
 	cd $(TESTPROGS_DIR) ; $(MAKE) install
 	cd $(MEDIA_SERVER_DIR) ; $(MAKE) install
+	cd $(MY_MEDIA_SERVER_DIR) ; $(MAKE) install
 	cd $(PROXY_SERVER_DIR) ; $(MAKE) install
 	cd $(HLS_PROXY_DIR) ; $(MAKE) install
 
@@ -42,6 +46,7 @@ clean:
 	cd $(BASIC_USAGE_ENVIRONMENT_DIR) ; $(MAKE) clean
 	cd $(TESTPROGS_DIR) ; $(MAKE) clean
 	cd $(MEDIA_SERVER_DIR) ; $(MAKE) clean
+	cd $(MY_MEDIA_SERVER_DIR) ; $(MAKE) clean
 	cd $(PROXY_SERVER_DIR) ; $(MAKE) clean
 	cd $(HLS_PROXY_DIR) ; $(MAKE) clean
 
@@ -49,6 +54,7 @@ distclean: clean
 	-rm -f $(LIVEMEDIA_DIR)/Makefile $(GROUPSOCK_DIR)/Makefile \
 	  $(USAGE_ENVIRONMENT_DIR)/Makefile $(BASIC_USAGE_ENVIRONMENT_DIR)/Makefile \
 	  $(TESTPROGS_DIR)/Makefile $(MEDIA_SERVER_DIR)/Makefile \
+	  $(MY_MEDIA_SERVER_DIR)/Makefile \
 	  $(PROXY_SERVER_DIR)/Makefile \
 	  $(HLS_PROXY_DIR)/Makefile \
 	  Makefile
