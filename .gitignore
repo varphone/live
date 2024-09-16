@@ -13,6 +13,7 @@
 # Compiled binaries
 hlsProxy/live555HLSProxy
 mediaServer/live555MediaServer
+myMediaServer/myMediaServer
 proxyServer/live555ProxyServer
 testProgs/MPEG2TransportStreamIndexer
 testProgs/mikeyParse
