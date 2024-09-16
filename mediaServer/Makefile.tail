@@ -1,9 +1,8 @@
 ##### End of variables to change
 
 MEDIA_SERVER = live555MediaServer$(EXE)
-MY_MEDIA_SERVER = MyMediaServer$(EXE)
 
-ALL = $(MEDIA_SERVER) $(MY_MEDIA_SERVER)
+ALL = $(MEDIA_SERVER)
 all: $(ALL)
 
 .$(C).$(OBJ):
@@ -12,15 +11,9 @@ all: $(ALL)
 	$(CPLUSPLUS_COMPILER) -c $(CPLUSPLUS_FLAGS) $<
 
 MEDIA_SERVER_OBJS = live555MediaServer.$(OBJ) DynamicRTSPServer.$(OBJ)
-MY_MEDIA_SERVER_OBJS = MyMediaServer.$(OBJ) MyRTSPServer.$(OBJ) MyFrame.$(OBJ) MyH264VideoFramedSource.$(OBJ) MyH264VideoServerMediaSubsession.$(OBJ)
 
 live555MediaServer.$(CPP):	DynamicRTSPServer.hh version.hh
 DynamicRTSPServer.$(CPP):	DynamicRTSPServer.hh
-MyMediaServer.$(CPP):	MyRTSPServer.hh version.hh
-MyRTSPServer.$(CPP):	MyRTSPServer.hh
-MyFrame.$(CPP):	MyFrame.hh
-MyH264VideoFramedSource.$(CPP):	MyH264VideoFramedSource.hh
-MyH264VideoServerMediaSubsession.$(CPP):	MyH264VideoServerMediaSubsession.hh
 
 USAGE_ENVIRONMENT_DIR = ../UsageEnvironment
 USAGE_ENVIRONMENT_LIB = $(USAGE_ENVIRONMENT_DIR)/libUsageEnvironment.$(libUsageEnvironment_LIB_SUFFIX)
@@ -37,13 +30,10 @@ LIBS =			$(LOCAL_LIBS) $(LIBS_FOR_CONSOLE_APPLICATION)
 live555MediaServer$(EXE):	$(MEDIA_SERVER_OBJS) $(LOCAL_LIBS)
 	$(LINK)$@ $(CONSOLE_LINK_OPTS) $(MEDIA_SERVER_OBJS) $(LIBS)
 
-MyMediaServer$(EXE):	$(MY_MEDIA_SERVER_OBJS) $(LOCAL_LIBS)
-	$(LINK)$@ $(CONSOLE_LINK_OPTS) $(MY_MEDIA_SERVER_OBJS) $(LIBS)
-
 clean:
 	-rm -rf *.$(OBJ) $(ALL) core *.core *~ include/*~
 
-install: $(MEDIA_SERVER) $(MY_MEDIA_SERVER)
+install: $(MEDIA_SERVER)
 	  install -d $(DESTDIR)$(PREFIX)/bin
 	  install -m 755 $(MEDIA_SERVER) $(DESTDIR)$(PREFIX)/bin
 
