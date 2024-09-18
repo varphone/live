@@ -50,3 +50,4 @@ testProgs/testReplicator
 testProgs/testWAVAudioStreamer
 testProgs/vobStreamer
 **/*.exe
+build/**
