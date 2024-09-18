@@ -2,7 +2,7 @@
 // For Linux, we need to implement our own our_gettimeofday() with clock_gettime()
 #include <sys/time.h>
 #include <time.h>
-extern int gettimeofday(struct timeval * __restrict tp, void * /*tz*/) {
+extern int gettimeofday(struct timeval * __restrict tp, void *tz) {
   struct timespec ts;
   if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
     return -1;
