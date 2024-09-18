@@ -1,0 +1,180 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "generic",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "hidden": true
+        },
+        {
+            "name": "amd64-linux",
+            "displayName": "For amd64 linux",
+            "hidden": true,
+            "inherits": "generic",
+            "cacheVariables": {
+                "BUILD_EXAMPLES": "OFF"
+            }
+        },
+        {
+            "name": "amd64-linux-dynamic",
+            "displayName": "Shared link for amd64 linux",
+            "hidden": true,
+            "inherits": "amd64-linux",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
+            "name": "amd64-linux-static",
+            "displayName": "Shared link for amd64 linux",
+            "hidden": true,
+            "inherits": "amd64-linux",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        },
+        {
+            "name": "amd64-linux-dynamic-debug",
+            "displayName": "Shared link for amd64 linux (Debug)",
+            "inherits": "amd64-linux-dynamic",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "amd64-linux-dynamic-release",
+            "displayName": "Shared link for amd64 linux (Release)",
+            "inherits": "amd64-linux-dynamic",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "amd64-linux-static-debug",
+            "displayName": "Static link for amd64 linux (Debug)",
+            "inherits": "amd64-linux-static",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "amd64-linux-static-release",
+            "displayName": "Static link for amd64 linux (Release)",
+            "inherits": "amd64-linux-static",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "arm64-linux",
+            "displayName": "For arm64 linux",
+            "hidden": true,
+            "inherits": "generic",
+            "cacheVariables": {
+                "BUILD_EXAMPLES": "OFF",
+                "CMAKE_C_COMPILER": "/usr/bin/aarch64-linux-gnu-gcc",
+                "CMAKE_CXX_COMPILER": "/usr/bin/aarch64-linux-gnu-g++"
+            }
+        },
+        {
+            "name": "arm64-linux-dynamic",
+            "displayName": "Shared link for arm64 linux",
+            "hidden": true,
+            "inherits": "arm64-linux",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
+            "name": "arm64-linux-static",
+            "displayName": "Shared link for arm64 linux",
+            "hidden": true,
+            "inherits": "arm64-linux",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        },
+        {
+            "name": "arm64-linux-dynamic-debug",
+            "displayName": "Shared link for arm64 linux (Debug)",
+            "inherits": "arm64-linux-dynamic",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "arm64-linux-dynamic-release",
+            "displayName": "Shared link for arm64 linux (Release)",
+            "inherits": "arm64-linux-dynamic",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "arm64-linux-static-debug",
+            "displayName": "Static link for arm64 linux (Debug)",
+            "inherits": "arm64-linux-static",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "arm64-linux-static-release",
+            "displayName": "Static link for arm64 linux (Release)",
+            "inherits": "arm64-linux-static",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "amd64-linux-dynamic-debug",
+            "displayName": "Debug",
+            "configurePreset": "amd64-linux-dynamic-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "amd64-linux-dynamic-release",
+            "displayName": "Release",
+            "configurePreset": "amd64-linux-dynamic-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "amd64-linux-static-debug",
+            "displayName": "Debug",
+            "configurePreset": "amd64-linux-static-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "amd64-linux-static-release",
+            "displayName": "Release",
+            "configurePreset": "amd64-linux-static-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "arm64-linux-dynamic-debug",
+            "displayName": "Debug",
+            "configurePreset": "arm64-linux-dynamic-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "arm64-linux-dynamic-release",
+            "displayName": "Release",
+            "configurePreset": "arm64-linux-dynamic-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "arm64-linux-static-debug",
+            "displayName": "Debug",
+            "configurePreset": "arm64-linux-static-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "arm64-linux-static-release",
+            "displayName": "Release",
+            "configurePreset": "arm64-linux-static-release",
+            "configuration": "Release"
+        }
+    ]
+}
