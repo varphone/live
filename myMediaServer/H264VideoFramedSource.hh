@@ -6,10 +6,10 @@
 
 namespace my {
 /// 基于帧的 H264 视频源
-class H264VideoFramedSource : public ::FramedSource
+class H264VideoFramedSource : public FramedSource
 {
 public:
-  H264VideoFramedSource(::UsageEnvironment& env,
+  H264VideoFramedSource(UsageEnvironment& env,
                         StreamBaseRef stream,
                         int trackId);
   H264VideoFramedSource(const H264VideoFramedSource& rhs);
@@ -33,7 +33,7 @@ private:
   virtual ::Boolean isH264VideoStreamFramer() const;
 
 private:
-  ::TaskToken mCurrentTask;
+  TaskToken mCurrentTask;
   StreamBaseRef mStream{ nullptr };
   int mTrackId{ 0 };
   int64_t mLastPTS{ 0 };
