@@ -2,6 +2,12 @@
 
 A complete RTSP server application.
 
+# Clone
+
+```bash
+git clone https://github.com/varphone/live.git --recursive
+```
+
 # Build and Run
 
 ```bash

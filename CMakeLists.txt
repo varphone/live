@@ -10,6 +10,7 @@ option(ENABLE_TRACE "Enable trace" OFF)
 #===============================================================================
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_compile_definitions(
     SOCKLEN_T=socklen_t
@@ -71,12 +72,13 @@ set(LIVE_SOURCES
 
 add_library(live ${LIVE_SOURCES})
 
-target_include_directories(live PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/BasicUsageEnvironment/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/groupsock/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/liveMedia/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/UsageEnvironment/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include
+target_include_directories(live
+    PUBLIC
+        ${CMAKE_SOURCE_DIR}/BasicUsageEnvironment/include
+        ${CMAKE_SOURCE_DIR}/groupsock/include
+        ${CMAKE_SOURCE_DIR}/liveMedia/include
+        ${CMAKE_SOURCE_DIR}/UsageEnvironment/include
+        ${CMAKE_SOURCE_DIR}/spdlog/include
 )
 
 # myMediaServer libraries and executable
@@ -92,8 +94,10 @@ list(FILTER mms_SOURCES EXCLUDE REGEX "myMediaServer/main.cpp")
 
 add_library(mms ${mms_SOURCES})
 
-target_include_directories(live PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include
+target_include_directories(mms
+    PUBLIC
+        ${CMAKE_SOURCE_DIR}/myMediaServer/include
+        ${CMAKE_SOURCE_DIR}/spdlog/include
 )
 
 target_link_libraries(mms

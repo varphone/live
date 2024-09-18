@@ -132,3 +132,28 @@ void MediaServer::spawn()
 }
 
 } // namespace my
+
+// C API
+//==================================================
+#include <MyMediaServer.h>
+
+void* mmsCreate(void)
+{
+  return new my::MediaServer();
+}
+
+void mmsDestroy(void* mms)
+{
+  delete static_cast<my::MediaServer*>(mms);
+}
+
+int mmsRun(void* mms)
+{
+  return static_cast<my::MediaServer*>(mms)->run();
+}
+
+int mmsSpawn(void* mms)
+{
+  static_cast<my::MediaServer*>(mms)->spawn();
+  return 0;
+}
