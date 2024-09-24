@@ -131,6 +131,11 @@ void MediaServer::spawn()
   std::thread([this] { run(); }).detach();
 }
 
+void MediaServer::shutdown()
+{
+  mShutdownFlag = 1;
+}
+
 } // namespace my
 
 // C API
