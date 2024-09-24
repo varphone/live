@@ -23,6 +23,10 @@ extern "C"
   /// \return 0 成功；其他 失败
   int mmsSpawn(void* mms);
 
+  /// 停止媒体服务器
+  /// \param mms 媒体服务器对象
+  void mmsShutdown(void* mms);
+
 #ifdef __cplusplus
 }
 #endif

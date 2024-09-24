@@ -121,7 +121,7 @@ int MediaServer::run()
   my::setupPlaybackStreams(mRtspServer, *mEnv);
 
   my::LiveSampleStreams::get()->startLiveSource();
-  mEnv->taskScheduler().doEventLoop(); // does not return
+  mEnv->taskScheduler().doEventLoop(&mShutdownFlag); // does not return
   my::LiveSampleStreams::get()->stopLiveSource();
   return 0;
 }
