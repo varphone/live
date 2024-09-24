@@ -14,6 +14,9 @@ StreamUri::StreamUri(char const* streamName)
     for (size_t i = 0; i < uriMatch.size(); ++i) {
       SPDLOG_TRACE("uriMatch[{}] = {}", i, uriMatch[i].str());
     }
+    if (uriMatch.size() > 1) {
+      mPath = std::string(uriMatch[1].str());
+    }
     if (uriMatch.size() > 2) {
       mTrackId = std::stoi(uriMatch[2].str());
     }
